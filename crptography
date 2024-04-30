@@ -1,0 +1,26 @@
+from cryptography.fernet import Fernet
+
+# Generate a key and save it to a file
+key = Fernet.generate_key()
+with open('filekey.key', 'wb') as filekey:
+    filekey.write(key)
+
+# Encrypt a file
+with open('filekey.key', 'rb') as filekey:
+    key = filekey.read()
+cipher_suite = Fernet(key)
+with open('nba.csv', 'rb') as file:
+    plaintext = file.read()
+encrypted_data = cipher_suite.encrypt(plaintext)
+with open('nba.csv.encrypted', 'wb') as encrypted_file:
+    encrypted_file.write(encrypted_data)
+
+# Decrypt a file
+with open('filekey.key', 'rb') as filekey:
+    key = filekey.read()
+cipher_suite = Fernet(key)
+with open('nba.csv.encrypted', 'rb') as encrypted_file:
+    encrypted_data = encrypted_file.read()
+decrypted_data = cipher_suite.decrypt(encrypted_data)
+with open('nba.csv.decrypted', 'wb') as decrypted_file:
+    decrypted_file.write(decrypted_data)
